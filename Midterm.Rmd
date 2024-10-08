@@ -55,7 +55,7 @@ household_campaign <- household_campaign %>%
 
 ```{r testplot}
 plot2 <- household_campaign %>%
-  ggplot(aes(x = transaction_month, fill = campaign_type) +
+  ggplot(aes(x = transaction_month, fill = campaign_type)) +
            geom_bar()+
            labs(
              fill = "Campaign Type",
@@ -63,7 +63,7 @@ plot2 <- household_campaign %>%
              y = "Transactions Completed",
              title = "Popularity of Campaigns by Month",
              subtitle = "ADD SUBTITLE")
-           )
+           
 
 plot(plot2)
 ```
