@@ -18,8 +18,48 @@ This is an R Markdown document. Markdown is a simple formatting syntax for autho
 
 When you click the **Knit** button a document will be generated that includes both content as well as the output of any embedded R code chunks within the document. You can embed an R code chunk like this:
 
-```{r cars}
-summary(cars)
+```{r data}
+library(completejourney)
+library(tidyverse)
+library(dplyr)
+library(ggplot2)
+library(lubridate)
+
+transactions <- get_transactions()
+promotions <- get_promotions()
+products <- products
+demographics <- demographics
+coupons <- coupons
+coupon_redemptions <- coupon_redemptions
+campaign_descriptions <- campaign_descriptions
+campaigns <- campaigns
+
+household_campaign <- inner_join(demographics, campaigns, by = "household_id")
+
+
+household_campaign <- inner_join(campaign_descriptions, household_campaign, "campaign_id")
+household_campaign <- inner_join(transactions, household_campaign, "household_id", relationship = "many-to-many")
+
+
+household_campaign <- household_campaign %>%
+  mutate(campaign_start_month = month(start_date, label = FALSE)) %>%
+  mutate(campaign_end_month = month(end_date, label = FALSE)) %>%
+  mutate(transaction_month = month(transaction_timestamp, label = FALSE))
+```
+
+```{r testplot}
+plot2 <- household_campaign %>%
+  ggplot(aes(x = transaction_month, fill = campaign_type) +
+           geom_bar()+
+           labs(
+             fill = "Campaign Type",
+             x = "Month",
+             y = "Transactions Completed",
+             title = "Popularity of Campaigns by Month",
+             subtitle = "ADD SUBTITLE")
+           )
+
+plot(plot2)
 ```
 
 ## Including Plots
