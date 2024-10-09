@@ -53,19 +53,51 @@ household_campaign <- household_campaign %>%
   mutate(transaction_month = month(transaction_timestamp, label = FALSE))
 ```
 
-```{r testplot}
+```{r testplots}
 plot2 <- household_campaign %>%
   ggplot(aes(x = transaction_month, fill = campaign_type)) +
-           geom_bar()+
-           labs(
-             fill = "Campaign Type",
-             x = "Month",
-             y = "Transactions Completed",
-             title = "Popularity of Campaigns by Month",
-             subtitle = "ADD SUBTITLE")
-           
+  geom_bar()+
+  labs(
+    fill = "Campaign Type",
+    x = "Month",
+    y = "Transactions Completed",
+    title = "Popularity of Campaigns by Month",
+    subtitle = "ADD SUBTITLE")
+
 
 plot(plot2)
+
+plot3 <- household_campaign %>%
+  semi_join(top5cats, household_campaign, by ="product_category") %>%
+  ggplot(aes(x = campaign_type, fill = product_category))+
+  geom_bar()+
+  scale_y_continuous(labels = scales::comma)+
+  labs(
+    x = "Campaign Type",
+    y = "Transactions Completed",
+    fill = "Product Category",
+    title = "Popularity of Campaigns by Product Category",
+    subtitle = "Using the 5 most purchased product categories, we can determine which Campaign Types influence the most sales.")
+
+
+plot3
+
+plot4 <- household_campaign %>%
+  ggplot(aes(x = income, fill = campaign_type))+
+  geom_bar()+
+  scale_y_continuous()+
+  labs(
+    x = "Household Income",
+    y = "Transactions Completed",
+    fill = "Campaign Type",
+    title = "Transactions Completed by Household Income and Campaign Type",
+    subtitle = "Determining which campaigns are most effective based on household income."
+  
+  )+
+  theme(axis.text.x = element_text(angle = 90, hjust = 1))
+
+plot4
+
 ```
 
 ## Including Plots
