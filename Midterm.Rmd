@@ -1,5 +1,5 @@
 ---
-title: "MidTerm Project"
+title: "2024_BANA4080_group08_midterm_project"
 Author:
   -name: Jay Powell
   -name: Dawson Siebert
