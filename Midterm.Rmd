@@ -94,9 +94,23 @@ campaigntype <- household_campaign %>%
     subtitle = "Determining which campaigns are most effective based on household income."
   ) +
   theme_minimal() +  # Optional: Use a minimal theme for a cleaner look
-  theme(axis.text.x = element_text(angle = 45, hjust = 1))  # Rotate x-axis labels
+  theme(axis.text.x = element_text(angle = 45, hjust = 1))  
 
 campaigntype
+
+redemption_heatmap <- household_campaign %>%
+  group_by(income, household_size) %>%
+  summarize(coupon_redemptions = n()) %>%
+  ggplot(aes(x = income, y = household_size, fill = coupon_redemptions)) +
+  geom_tile() +
+  scale_fill_viridis(option ="plasma" , name = "Coupon Redemptions", labels = scales::comma) +
+  labs(
+    x="Income",
+    y="Household Size",
+    title="Coupon Redemptions by Income and Household Size")+
+  theme(axis.text.x = element_text(angle = 45, hjust = 1))  
+
+redemption_heatmap
 
 ```
 
