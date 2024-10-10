@@ -98,19 +98,26 @@ campaigntype <- household_campaign %>%
 
 campaigntype
 
-redemption_heatmap <- household_campaign %>%
-  group_by(income, household_size) %>%
-  summarize(coupon_redemptions = n()) %>%
-  ggplot(aes(x = income, y = household_size, fill = coupon_redemptions)) +
-  geom_tile() +
-  scale_fill_viridis(option ="plasma" , name = "Coupon Redemptions", labels = scales::comma) +
-  labs(
-    x="Income",
-    y="Household Size",
-    title="Coupon Redemptions by Income and Household Size")+
-  theme(axis.text.x = element_text(angle = 45, hjust = 1))  
+heatmapdata <- merge(demographics, coupon_redemptions, by = "household_id") %>%
+  merge(transactions, by = "household_id")
 
-redemption_heatmap
+heatmapdata_2 <- heatmapdata %>%
+  group_by(income, household_size) %>%
+  summarize(
+    coupon_redemptions = n(),
+    total_transactions = n_distinct(basket_id)
+  ) %>%
+  mutate(coupon_redemption_rate = coupon_redemptions / total_transactions * 100)
+
+heatmap <- ggplot(heatmapdata_2, aes(x = income, y = household_size, fill = coupon_redemption_rate)) +
+  geom_tile() +
+  scale_fill_viridis(option = "plasma", name = "Coupon Redemption Rate (%)") +
+  labs(x = "Income", 
+       y = "Household Size", 
+       title = "Coupon Redemption Rate by Income and Household Size")+
+  theme(axis.text.x = element_text(angle = 45, hjust = 1))
+
+heatmap
 
 ```
 
