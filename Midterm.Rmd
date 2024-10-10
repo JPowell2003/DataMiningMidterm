@@ -82,21 +82,21 @@ plot3 <- household_campaign %>%
 
 plot3
 
-plot4 <- household_campaign %>%
-  ggplot(aes(x = income, fill = campaign_type))+
-  geom_bar()+
-  scale_y_continuous()+
+campaigntype <- household_campaign %>%
+  ggplot(aes(x = income, fill = campaign_type)) +
+  geom_bar() +
+  scale_y_continuous() +
   labs(
     x = "Household Income",
     y = "Transactions Completed",
     fill = "Campaign Type",
     title = "Transactions Completed by Household Income and Campaign Type",
     subtitle = "Determining which campaigns are most effective based on household income."
-  
-  )+
-  theme(axis.text.x = element_text(angle = 90, hjust = 1))
+  ) +
+  theme_minimal() +  # Optional: Use a minimal theme for a cleaner look
+  theme(axis.text.x = element_text(angle = 45, hjust = 1))  # Rotate x-axis labels
 
-plot4
+campaigntype
 
 ```
 
