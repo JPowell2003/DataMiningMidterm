@@ -111,6 +111,33 @@ This heatmap highlights that households with 3 members and an income between 125
 
 #Third Graph goes here!
 ```{r line graph}
+household_redemptions <- coupon_redemptions%>%
+  left_join(demographics, by ="household_id") %>%
+  mutate(month = as.numeric(month(redemption_date)))
+
+household_redemptions_grouped <- household_redemptions %>%
+  group_by(income, month) %>%
+  summarise(redemptions=n())
+
+custom_palette <- c("#E41A1C", "#4DAF4A", "#377EB8", "#FF0199", "#FF7F00", "#00FFFF",
+                    "#A65628", "#984EA3", "#000080", "#808000", "#800080", "#008080",
+                    "#C0C0C0")
+
+redemptionsovertime <- household_redemptions_grouped %>%
+  ggplot(aes(x = month, y = redemptions, color = income))+
+  geom_line()+
+  scale_color_manual(values = custom_palette)+
+  labs(
+    x = "Redemption Month ",
+    y = "Total Redemptions",
+    fill = "Income",
+    title = "Coupon Redemptions Over Time Based on Income",
+    subtitle = "Determining which campaigns have been more popular throughout the year in varying income demographics.")+
+  scale_x_discrete(labels = month.abb)+
+  theme(axis.text.x = element_text(angle = 45, hjust = 1))  
+
+redemptionsovertime
+
 ```
 
 # Key Findings and Recommendations
