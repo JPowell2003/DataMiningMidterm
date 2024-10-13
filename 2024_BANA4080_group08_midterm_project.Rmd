@@ -116,11 +116,13 @@ We introduced the variable redemptions, which represents the total number of cou
 ```{r line graph}
 household_redemptions <- coupon_redemptions %>%
   left_join(demographics, by = "household_id") %>%
-  mutate(month = factor(month(redemption_date), levels = 1:12, labels = month.abb))
+  mutate(month = factor(month(redemption_date), levels = 1:12, labels = month.abb)) %>%
 
 household_redemptions_grouped <- household_redemptions %>%
   group_by(income, month) %>%
   summarise(redemptions = n())
+household_redemptions_grouped <- household_redemptions_grouped %>%
+  drop_na(income)
 
 custom_palette <- c("#E41A1C", "#4DAF4A", "#377EB8", "#FF0199", "#FF7F00", "#00FFFF",
                     "#A65628", "#984EA3", "#000080", "#808000", "#800080", "#008080",
