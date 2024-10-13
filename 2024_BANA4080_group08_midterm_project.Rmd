@@ -81,6 +81,7 @@ campaigntype <- household_campaign %>%
 campaigntype
 ```
 
+
 This chart reveals that middle-income households, particularly those earning between 50K and 74K, generate the highest number of transactions. Type A campaigns, which offer personalized coupon recommendations, are especially effective for this income group. While Type B and C campaigns also drive engagement, Type A consistently leads across most income segments, emphasizing the importance of personalized promotions.
 
 # Coupon Redemption Rate by Income and Household Size
@@ -109,6 +110,7 @@ heatmap <- ggplot(heatmapdata_2, aes(x = income, y = household_size, fill = coup
 
 heatmap
 ```
+
 
 This heatmap highlights that households with 3 members and an income between 150K and 174K exhibit the highest coupon redemption rates. Larger households (5+ members) with lower incomes also have strong coupon engagement, particularly benefiting from personalized campaigns. However, wealthier households (earning over 200K) show less engagement with coupons, indicating that they may respond better to different marketing strategies beyond discounts.
 
@@ -146,6 +148,7 @@ redemptionsovertime <- household_redemptions_grouped %>%
 redemptionsovertime
 
 ```
+
 
 The graph reveals significant redemption spikes for the 50K–74K bracket, especially around May, August, and November. These peaks suggest that households within these income ranges are particularly responsive to promotions during these months, likely coinciding with seasonal campaigns or sales events. On the other hand, income groups below 25K and those above 250K show consistently lower engagement with coupon redemptions across the year, indicating less responsiveness to discount-based marketing strategies. This information can guide marketers to focus coupon-driven campaigns more on middle-income groups and explore alternative promotions for other segments.
 
