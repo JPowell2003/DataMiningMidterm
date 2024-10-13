@@ -1,36 +1,42 @@
 ---
-title: "2024_BANA4080_group08_midterm_project"
+title: "Regork Coupon Campaign Analysis"
 Author:
-  -name: Jay Powell
-  -name: Dawson Siebert
-  -name: Nikki Carfora
-output: html_document
+  - Jay Powell
+  - Dawson Siebert
+  - Nikki Carfora
 date: "2024-10-08"
+output: html_document
 ---
 
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = TRUE)
 ```
 
-##Introduction
+# Introduction
 Regork is always seeking new ways to boost revenue, and one powerful tool at its disposal is using coupons to drive sales. However, the effectiveness of coupons varies widely across different customer segments, meaning that marketing resources may be inefficiently allocated without a clear understanding of which demographics respond best. By analyzing Regork’s internal data, including customer transactions, demographics, and coupon redemptions, we can gain key insights into which household segments find coupons most valuable. This analysis will allow the CEO to make better-informed decisions about where to focus marketing efforts, ultimately increasing sales, improving customer satisfaction, and maximizing the return on marketing investments. Based on these findings, we recommend refining coupon strategies for key demographics and exploring alternative strategies for less responsive groups.
 
-##Packages and Libraries Used
-The libraries and packages we used include
-* completejourney: Accessed Regork’s internal database, including tables like transactions, demographics, and coupon redemptions.
-* tidyverse: Handled data manipulation tasks such as filtering, joining, and summarizing.
-* dplyr: Used for data wrangling to clean and prepare the data for analysis.
-* ggplot2: Created visualizations to display findings effectively.
-* lubridate: Processed date-related data to analyze campaign timing, like extracting months from timestamps.
-* viridis: Applied visually accessible color schemes to the heatmaps for clearer interpretation.
+# Packages and Libraries Used
+The libraries and packages we used include:
 
-```{r data}
+* completejourney: Accessed Regork’s internal database, including tables like transactions, demographics, and coupon redemptions.     
+* tidyverse: Handled data manipulation tasks such as filtering, joining, and summarizing.      
+* dplyr: Used for data wrangling to clean and prepare the data for analysis.      
+* ggplot2: Created visualizations to display findings effectively.      
+* lubridate: Processed date-related data to analyze campaign timing, like extracting months from timestamps.     
+* viridis: Applied visually accessible color schemes to the heatmaps for clearer interpretation.      
+
+```{r imports}
 library(completejourney)
 library(tidyverse)
 library(dplyr)
 library(ggplot2)
 library(lubridate)
+library(viridis)
+```
 
+# Data Import, Cleaning, and Merging
+We imported and merged multiple datasets, including transactions, demographics, and coupon redemptions. These datasets were linked using key identifiers like household_id and campaign_id. We cleaned the data by checking for missing values in critical fields such as transaction timestamps, household information, and campaign data. To ensure consistency, we created new variables like campaign_start_month, campaign_end_month, and transaction_month, which allowed us to track customer interactions with campaigns over time. Merging these datasets enabled us to assess how customer segments respond to coupon campaigns and which demographic groups demonstrate the highest engagement.
+```{r manipulation}
 transactions <- get_transactions()
 promotions <- get_promotions()
 products <- products
@@ -53,7 +59,10 @@ household_campaign <- household_campaign %>%
   mutate(transaction_month = month(transaction_timestamp, label = FALSE))
 ```
 
-```{r testplots}
+# Transactions Completed by Household Income and Campaign type
+To better track campaign engagement, we created new variables such as campaign_start_month, campaign_end_month, and transaction_month. These allowed us to analyze the timing of transactions and campaign performance over specific periods. Additionally, we visualized how different income groups respond to various campaign types (Type A, B, and C) by calculating total transactions completed by household income.
+
+```{r bar chart}
 campaigntype <- household_campaign %>%
   ggplot(aes(x = income, fill = campaign_type)) +
   geom_bar() +
@@ -69,7 +78,13 @@ campaigntype <- household_campaign %>%
   theme(axis.text.x = element_text(angle = 45, hjust = 1))  
 
 campaigntype
+```
+This chart reveals that middle-income households, particularly those earning between 35K and 45K, generate the highest number of transactions. Type A campaigns, which offer personalized coupon recommendations, are especially effective for this income group. While Type B and C campaigns also drive engagement, Type A consistently leads across most income segments, emphasizing the importance of personalized promotions.
 
+# Coupon Redemption Rate by Income and Household Size
+We introduced the coupon_redemption_rate variable, which was calculated by dividing the number of coupon redemptions by total transactions for each income and household size combination. This metric helped uncover which groups engage most with coupon-based promotions.
+
+```{r heat map}
 heatmapdata <- merge(demographics, coupon_redemptions, by = "household_id") %>%
   merge(transactions, by = "household_id")
 
@@ -77,7 +92,8 @@ heatmapdata_2 <- heatmapdata %>%
   group_by(income, household_size) %>%
   summarize(
     coupon_redemptions = n(),
-    total_transactions = n_distinct(basket_id)
+    total_transactions = n_distinct(basket_id),
+    .groups = 'drop'
   ) %>%
   mutate(coupon_redemption_rate = coupon_redemptions / total_transactions * 100)
 
@@ -90,5 +106,4 @@ heatmap <- ggplot(heatmapdata_2, aes(x = income, y = household_size, fill = coup
   theme(axis.text.x = element_text(angle = 45, hjust = 1))
 
 heatmap
-
 ```
