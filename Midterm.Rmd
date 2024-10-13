@@ -13,16 +13,16 @@ knitr::opts_chunk$set(echo = TRUE)
 ```
 
 ##Introduction
-###Business Problem
-
-###Our Approach
-Mention datasets and explain method
-
-###Proposed Solution
-Summarize how the analysis will help the CEO make better decisions
+Regork is always seeking new ways to boost revenue, and one powerful tool at its disposal is using coupons to drive sales. However, the effectiveness of coupons varies widely across different customer segments, meaning that marketing resources may be inefficiently allocated without a clear understanding of which demographics respond best. By analyzing Regork’s internal data, including customer transactions, demographics, and coupon redemptions, we can gain key insights into which household segments find coupons most valuable. This analysis will allow the CEO to make better-informed decisions about where to focus marketing efforts, ultimately increasing sales, improving customer satisfaction, and maximizing the return on marketing investments. Based on these findings, we recommend refining coupon strategies for key demographics and exploring alternative strategies for less responsive groups.
 
 ##Packages and Libraries Used
-List of libraries Used and purpose of key libraries
+The libraries and packages we used include
+* completejourney: Accessed Regork’s internal database, including tables like transactions, demographics, and coupon redemptions.
+* tidyverse: Handled data manipulation tasks such as filtering, joining, and summarizing.
+* dplyr: Used for data wrangling to clean and prepare the data for analysis.
+* ggplot2: Created visualizations to display findings effectively.
+* lubridate: Processed date-related data to analyze campaign timing, like extracting months from timestamps.
+* viridis: Applied visually accessible color schemes to the heatmaps for clearer interpretation.
 
 ```{r data}
 library(completejourney)
@@ -54,34 +54,6 @@ household_campaign <- household_campaign %>%
 ```
 
 ```{r testplots}
-plot2 <- household_campaign %>%
-  ggplot(aes(x = transaction_month, fill = campaign_type)) +
-  geom_bar()+
-  labs(
-    fill = "Campaign Type",
-    x = "Month",
-    y = "Transactions Completed",
-    title = "Popularity of Campaigns by Month",
-    subtitle = "ADD SUBTITLE")
-
-
-plot(plot2)
-
-plot3 <- household_campaign %>%
-  semi_join(top5cats, household_campaign, by ="product_category") %>%
-  ggplot(aes(x = campaign_type, fill = product_category))+
-  geom_bar()+
-  scale_y_continuous(labels = scales::comma)+
-  labs(
-    x = "Campaign Type",
-    y = "Transactions Completed",
-    fill = "Product Category",
-    title = "Popularity of Campaigns by Product Category",
-    subtitle = "Using the 5 most purchased product categories, we can determine which Campaign Types influence the most sales.")
-
-
-plot3
-
 campaigntype <- household_campaign %>%
   ggplot(aes(x = income, fill = campaign_type)) +
   geom_bar() +
@@ -120,13 +92,3 @@ heatmap <- ggplot(heatmapdata_2, aes(x = income, y = household_size, fill = coup
 heatmap
 
 ```
-
-## Including Plots
-
-You can also embed plots, for example:
-
-```{r pressure, echo=FALSE}
-plot(pressure)
-```
-
-Note that the `echo = FALSE` parameter was added to the code chunk to prevent printing of the R code that generated the plot.
